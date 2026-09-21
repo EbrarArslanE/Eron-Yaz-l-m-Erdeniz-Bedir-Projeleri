@@ -1,0 +1,77 @@
+<footer class="footer">
+  <div class="container-fluid" style="position: relative;">
+    <div class="row">
+      <div class="col-sm-4">
+        Copyright © 2024 - TÜM HAKLARI ANA SIGORTA'YA AİTTİR
+      </div>
+      <div class="col-sm-4 text-center">
+        <img src="assets/images/logo.png" style="height: 60px;">
+      </div>
+      <div class="col-sm-4 text-center">
+      </div>
+    </div>
+    
+    <div class="chat-container" [class.active]="kisiListesi"> 
+      <div class="chat-header" (click)="kisiListesi = !kisiListesi" [ngClass]="{'bg-primary text-light': okunmamisMesajKid}">
+        <div>
+          <div class="user-icon me-2">
+            <strong>{{PERSONEL_ADI.substring(0, 1)}}</strong>
+          </div>
+          <strong>Mesajlaşma</strong>
+          <div class="okunmamisMesaj" *ngIf="okunmamisMesajKid">1</div>
+        </div>
+        <div>
+          <!-- <i class="ri-edit-box-line fs-22 me-2 text-dark"></i> -->
+          <i class="ri-arrow-up-s-line fs-26" [ngClass]="{'text-light': okunmamisMesajKid}" *ngIf="!kisiListesi"></i>
+          <i class="ri-arrow-down-s-line fs-26" [ngClass]="{'text-light': okunmamisMesajKid}" *ngIf="kisiListesi"></i>
+        </div>
+      </div>
+      <div class="chat-konusmalar">
+        <div class="chat-kisiler" *ngFor="let item of YONETIM_KULLANICI_LISTESI; let i = index" (click)="konusmaAc(item, i)" [ngClass]="{'okunmamisKisi': okunmamisMesajKid == item.e_id}">
+          <div class="user-icon me-2 border-0">
+            <strong>{{item.e_personel_adi.substring(0,1)}}</strong>
+          </div>
+          <div>
+            <p class="m-0 text-primary"><strong>{{item.e_personel_adi}}</strong></p>
+            <span *ngIf="item.MESAJLAR.length == 0">Son görüşme bulunamadı.</span>
+            <span *ngIf="item.MESAJLAR.length > 0">{{item.MESAJLAR[0].MESAJ}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mesaj-container" [class.active]="mesajKutusu" *ngIf="aktifKonusmaPenceresiIndex != null"> 
+      <div class="chat-header" (click)="mesajKutusu = !mesajKutusu">
+        <div>
+          <div class="user-icon me-2">
+            <strong>{{YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_personel_adi.substring(0, 1)}}</strong>
+          </div>
+          <strong>{{YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_personel_adi}}</strong>
+        </div>
+        <div>
+          <i class="ri-arrow-up-s-line fs-26 text-dark" *ngIf="!mesajKutusu"></i>
+          <i class="ri-arrow-down-s-line fs-26 text-dark" *ngIf="mesajKutusu"></i>
+          <i class="ri-close-line fs-22 mx-2 text-dark" (click)="mesajKutusu = false; aktifKonusmaPenceresiIndex = null"></i>
+        </div>
+      </div>
+      <div class="chat-konusmalar" style="height: calc(100vh - 500px);" id="chat-page">
+        <div class="chat-kisiler" *ngFor="let item of YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].MESAJLAR">
+          <div class="user-icon me-2 border-0 w-10">
+            <strong *ngIf="item.R != YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_id">{{YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_personel_adi.substring(0,1)}}</strong>
+            <strong *ngIf="item.R == YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_id">{{PERSONEL_ADI.substring(0,1)}}</strong>
+          </div>
+          <div class="w-80">
+            <p class="m-0 text-primary" *ngIf="item.R != YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_id"><strong>{{YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_personel_adi}}</strong> <small class="text-muted mx-2">- {{item.TARIH | date: 'HH:mm'}}</small></p>
+            <p class="m-0 text-primary" *ngIf="item.R == YONETIM_KULLANICI_LISTESI[aktifKonusmaPenceresiIndex].e_id"><strong>{{PERSONEL_ADI}}</strong> <small class="text-muted mx-2">- {{item.TARIH | date: 'HH:mm'}}</small></p>
+            <span>{{item.MESAJ}}</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="form-group p-3">
+
+      </div>
+    </div>
+
+  </div>
+</footer>

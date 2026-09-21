@@ -1,0 +1,86 @@
+<!-- Doğrulama Kodu Giriş Modali -->
+<!-- <ng-template #modalDogrulama let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ dogrulamaTuru === 'email' ? 'E-posta Doğrulama' : 'SMS Doğrulama' }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)=" girisYapBtn = false; modal.dismiss('');" style="border: none; background-color: transparent;">
+      <span class="fs-24" aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body" style="max-height: calc(100vh - 144px)">
+    <form validControl [formGroup]="dogrulamaFormu" (submit)="koduDogrula()">
+      <div class="d-flex justify-content-center">
+        <ng-otp-input formControlName="kod" [config]="{ length: 6 }" title="Doğrulama Kodu"></ng-otp-input>
+      </div>
+      <button id="submitButton1" class="hidden">Kaydet</button>
+    </form>
+    <p class="text-center mt-3">Kod {{ dogrulamaTuru === 'email' ? 'e-posta adresinize' : 'telefonunuza' }} gönderildi.</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary me-1 w-lg" *ngIf="!dogrulamaBtn" onclick="document.getElementById('submitButton1').click()">
+      <i class="fas fa-paper-plane me-2"></i>Giriş Yap
+    </button>
+    <button class="btn btn-primary me-1 w-lg" *ngIf="dogrulamaBtn">
+      <div class="spinner-border spinner-border-sm me-2"></div>Giriş Yapılıyor...
+    </button>
+  </div>
+</ng-template> -->
+
+<div class="container-fluid p-0">
+  <div class="row no-gutters">
+    <div class="col-4">
+      <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
+        <div class="w-100">
+          <div class="row justify-content-center">
+            <div class="col-lg-9">
+              <div class="text-center">
+                <img src="assets/images/logo.png" style="max-width: 95%;">
+              </div>
+
+              <div class="text-center mt-3 mb-4">
+                <h4 class="mt-4 font-weight-bold text-primary">Parça Tedarik Yönetim Sistemi V2.1001.1</h4>
+                <hr class="my-3" style="width: 80%; margin: auto;">
+              </div>
+              <div class="p-2 mt-5">
+                <form validControl class="form-horizontal" [formGroup]="girisFormu" (submit)="girisYap()">
+                  <div class="form-group auth-form-group-custom mb-4">
+                    <input type="text" id="e_mail_adresi" class="form-control" formControlName="e_mail_adresi" title="Kullanıcı Adı" required placeholder="Kullanıcı Adınız...">
+                    <i class="ri-user-2-line auti-custom-input-icon"></i>
+                  </div>
+                  <div class="form-group auth-form-group-custom mb-4">
+                    <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                    <input type="password" id="e_sifre" class="form-control" formControlName="e_sifre" title="Şifre" required placeholder="Şifreniz">
+                  </div>
+                  <div class="custom-control custom-checkbox mb-4">
+                    <input type="checkbox" id="e_beni_hatirla" class="custom-control-input" style="margin-right: 5px;" formControlName="e_beni_hatirla">
+                    <label class="custom-control-label" for="e_beni_hatirla">Beni Hatırla</label>
+                  </div>
+                  <div class="mt-4 text-center">
+                    @if(!girisYapBtn){
+                      <button class="btn btn-primary btn-block w-100">Giriş Yap</button>
+                    } @else {
+                      <button type="button" class="btn btn-primary btn-block w-100">Giriş Yapılıyor...</button>
+                    }
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="authentication-bg">
+        <!-- <div class="bg-overlay"></div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-switch .form-check-input {
+    width: 60px;
+    height: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+</style>

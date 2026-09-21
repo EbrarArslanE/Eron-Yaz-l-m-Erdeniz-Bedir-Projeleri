@@ -1,0 +1,188 @@
+// ─────────────────────────────────────────────
+//  Sidebar — My Vision
+//  Indigo × Teal · Minimal · Karakterli
+// ─────────────────────────────────────────────
+
+:host-context(body:not(.vertical-collpsed)) {
+
+  // ── Ambient glow (sidebar arka planına) ───
+  // Bunu sidebar'ın ana wrapper'ına ekle:
+  // background: rgba(255,255,255,0.03)
+  // border-right: 1px solid rgba(255,255,255,0.06)
+  // position: relative; overflow: hidden
+  //
+  // &::before  → üst sol indigo halo
+  // &::after   → alt sağ teal halo
+
+  // ── Section labels ────────────────────────
+
+  .menu-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px 4px;
+  }
+
+  // ── Sub-menu ──────────────────────────────
+
+  .sub-menu {
+    margin-left: 8px;
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    margin-right: 8px;
+
+    li {
+
+      a.sub-menu-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 9px;
+        padding: 6px 10px !important;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.1px;
+        color: rgba(255, 255, 255, 0.35);
+        transition: background 0.15s ease, color 0.15s ease;
+        position: relative;
+
+        // Sub dot
+        &::before {
+          content: "";
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.2);
+          flex-shrink: 0;
+          transition: background 0.15s ease, box-shadow 0.15s ease;
+          position: static; // override varsa
+          display: inline-block;
+        }
+
+        i {
+          display: none; // sub-item'larda ikon yok, dot var
+        }
+
+        .menu-text {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        // ── Hover ──
+        &:hover {
+          background: rgba(255, 255, 255, 0.04) !important;
+          color: rgba(255, 255, 255, 0.65);
+        }
+
+        // ── Active ──
+        &.active {
+          color: #a5b4fc !important;
+          background: transparent !important;
+
+          &::before {
+            background: #6366f1;
+            box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
+          }
+        }
+      }
+    }
+  }
+
+  // ── Main nav links ─────────────────────────
+
+  .side-nav-link-ref {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 8px 14px 8px 16px;
+    margin: 1px 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+    color: rgba(255, 255, 255, 0.45);
+    position: relative;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    i {
+      width: 16px;
+      height: 16px;
+      opacity: 0.4;
+      flex-shrink: 0;
+      transition: opacity 0.15s ease, color 0.15s ease;
+    }
+
+    // ── Active (top-level) ──
+    &.active:not(.sub-menu-item) {
+      background: rgba(99, 102, 241, 0.12) !important;
+      color: rgba(255, 255, 255, 0.92) !important;
+
+      // Sol accent bar
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 18px;
+        border-radius: 0 3px 3px 0;
+        background: linear-gradient(180deg, #6366f1, #14b8a6);
+      }
+
+      i {
+        opacity: 1;
+        color: #818cf8;
+      }
+    }
+
+    // ── Hover ──
+    &:not(.active):hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: rgba(255, 255, 255, 0.75);
+
+      i {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  // ── Arrow (has-arrow) ──────────────────────
+
+  .has-arrow {
+
+    i {
+      transition: color 0.15s ease, opacity 0.15s ease;
+    }
+
+    &:hover i {
+      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  // ── Parent active ──────────────────────────
+
+  .is-parent.active {
+    background: rgba(255, 255, 255, 0.03) !important;
+
+    > a i {
+      opacity: 0.7;
+      color: #818cf8;
+    }
+  }
+
+  // ── Divider ───────────────────────────────
+
+  .menu-item.divider,
+  hr.menu-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 8px 16px;
+    border: none;
+  }
+}

@@ -1,0 +1,121 @@
+.chat-container {
+  width: 300px;
+  overflow: auto;
+  background-color: #fff;
+  position: fixed;
+  bottom: calc(-100vh + 295px);
+  right: 0;
+  transition: bottom 0.3s ease;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: solid 0.2px #ddd;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.chat-container.active {
+  bottom: 0;
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  border: #090f3c 3px solid;
+  display: inline-block;
+  background-color: #f1f6fa;
+  color: #090f3c;
+  text-align: center;
+  position: relative;
+}
+
+.user-icon strong {
+  font-size: 25px;
+  text-transform: uppercase;
+}
+
+.user-icon::after {
+  content: ' ';
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  background-color: #1cbb8c;
+  border: 1px solid #fff;
+  position: absolute;
+  bottom: -3px;
+  right: 0;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+}
+
+.chat-header div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-konusmalar {
+  overflow: auto;
+  height: calc(100vh - 300px);
+  background-color: #fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  scroll-behavior: smooth;
+}
+
+.chat-kisiler{
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.chat-kisiler:first-child{
+  border: 0;
+}
+
+.mesaj-container {
+  width: 250px;
+  overflow: auto;
+  background-color: #fff;
+  position: fixed;
+  bottom: calc(-100vh + 420px);
+  right: 320px;
+  transition: bottom 0.4s ease, width 0.3s ease;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: solid 0.2px #ddd;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.mesaj-container.active {
+  bottom: 0;
+  width: 400px;
+}
+
+
+.okunmamisMesaj{
+  display: flex; 
+  width: 15px; 
+  height: 15px; 
+  border-radius: 12px; 
+  background-color: red; 
+  font-size: 12px; 
+  color: #fff; 
+  margin-left: 10px;
+}
+
+.okunmamisKisi{
+  background-color: #090f3c45 !important;
+}

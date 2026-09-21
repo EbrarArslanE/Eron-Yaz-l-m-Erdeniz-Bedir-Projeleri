@@ -1,0 +1,77 @@
+<header id="page-topbar">
+  <div class="navbar-header">
+    <div class="d-flex w-100" style="justify-content: space-between;">
+      <div class="navbar-brand-box">
+        <a href="./anasayfa" class="logo logo-dark">
+          <span class="logo-sm">
+            <img src="assets/images/logo-light.png" style="width: 70%; height: 60px; object-fit: contain;">
+          </span>
+          <span class="logo-lg">
+            <img src="assets/images/logo-light.png" style="width: 70%; height: 60px; object-fit: contain;">
+          </span>
+        </a>
+        <a href="./anasayfa" class="logo logo-light">
+          <span class="logo-sm">
+            <img src="assets/images/logo-light.png" style="width: 70%; height: 60px; object-fit: contain;">
+          </span>
+          <span class="logo-lg">
+            <img src="assets/images/logo-light.png" style="width: 70%; height: 60px; object-fit: contain;">
+          </span>
+        </a>
+      </div>
+      <div class="topnav">
+        <div class="container-fluid">
+          <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+            <div class="collapse navbar-collapse" id="topnav-menu-content">
+              <ul class="navbar-nav">
+                @for(item of menuItems;track $index){
+                <li class="nav-item dropdown" *ngIf="!item.hidden">
+                  <a class="nav-link dropdown-toggle arrow-none side-nav-link-ref" href="javascript: void(0);" [routerLink]="item.link" id="topnav-components" role="button" routerLinkActive="active">
+                    <i class="{{ item.icon }}"></i> {{ item.label | translate }}
+                    @if(item.subItems){<div class="arrow-down"></div>}
+                  </a>
+                  @if(hasItems(item)){
+                  <div class="dropdown-menu row" aria-labelledby="topnav-dashboard" id="navmenu" style="max-height: calc(60vh); overflow: auto;">
+                    @for(subitem of item.subItems;track $index){
+                    @if(hasItems(subitem)){
+                    <div class="dropdown" *ngIf="!item.hidden">
+                      <a class="dropdown-item" (click)="onMenuClick($event)">{{ subitem.label | translate}}
+                        <div class="arrow-down"></div>
+                      </a>
+                      <div class="dropdown-menu">
+                        <ng-template ngFor let-subSubitem [ngForOf]="subitem.subItems">
+                          <a class="dropdown-item side-nav-link-ref" [routerLink]="subSubitem.link" routerLinkActive="active">{{ subSubitem.label | translate}}</a>
+                        </ng-template>
+                      </div>
+                    </div>
+                    }@else {
+                    <a class="col dropdown-item side-nav-link-ref" *ngIf="!subitem.hidden" [routerLink]="subitem.link" routerLinkActive="active">{{subitem.label | translate}}</a>
+                    }
+                    }
+                  </div>
+                  }
+                </li>
+                }
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="text-success text-end">{{kullaniciIpAdresi}}</div>
+        <div class="dropdown d-inline-block user-dropdown" ngbDropdown>
+          <button type="button" ngbDropdownToggle class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img class="rounded-circle header-profile-user" style="width: 30px;height: 30px;" src="assets/images/user.png" alt="Kullanıcı">
+            <span class="d-none d-xl-inline-block ms-1 p-1">{{loginOlanKullaniciAdi}}</span>
+            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+            <a class="dropdown-item" style="cursor: pointer;" (click)="changeLayout('vertical')"><i class="fas fa-ellipsis-v align-middle me-2"></i> Yan Menü</a>
+            <hr>
+            <a class="dropdown-item text-danger" href="javascript: void(0);" (click)="logout()"><i class="ri-shut-down-line align-middle me-1 text-danger"></i>Çıkış Yap</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

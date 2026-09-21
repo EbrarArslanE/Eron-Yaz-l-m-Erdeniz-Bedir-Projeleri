@@ -1,0 +1,114 @@
+<ng-template #modalKullaniciTanimlari let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{modalHeader.title}}</h4>
+  </div>
+  <div class="modal-body" style="max-height: calc(100vh - 144px)">
+    <form validControl [formGroup]="kullaniciTanimlariFormu" (submit)="kullaniciIslemiKaydet()">
+      <div class="row m-0">
+        <div class="col-md-12 form-group">
+          <label>Ad Soyad <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_kullanici_adi_soyadi" title="Ad Soyad" required>
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Mail Adresi <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_mail_adresi" title="Mail Adresi" required>
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Eski Sistem Kullanıcı ID <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_eski_sistem_kullanici_id" title="Eski Sistem Kullanıcı ID" required>
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Durum <span class="text-danger">*</span></label>
+          <select class="form-control" formControlName="e_durum" title="Durum" required>
+            <option value="">--Seçiniz--</option>
+            <option value="Aktif">Aktif</option>
+            <option value="Pasif">Pasif</option>
+          </select>
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Şifre <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" formControlName="e_sifre" title="Şifre" required>
+          <div class="progress mt-2 mb-2">
+            <div class="progress-bar"
+                [style.width]="(parolaKontrol <= 2 && parolaKontrol > 0) ? '10%' : (parolaKontrol == 3 ? '60%' : parolaKontrol == 4 ? '100%': '0')"
+                [ngClass]="{'bg-danger': parolaBarKontrol == 'danger', 'bg-warning': parolaBarKontrol == 'warning', 'bg-success': parolaBarKontrol == 'success'}"
+            ></div>
+          </div>
+          <ul class="list-unstyled">
+            <li><span class="low-upper-case">   <i class="fas me-2" [ngClass]="{'fa-circle': !buyukKucukHarfKontrol,  'fa-check text-success': buyukKucukHarfKontrol}"></i>Büyük & Küçük Harf</span></li>
+            <li><span class="one-number">       <i class="fas me-2" [ngClass]="{'fa-circle': !sayiKontrol,            'fa-check text-success': sayiKontrol}"></i>Sayı (0-9)</span></li>
+            <li><span class="one-special-char"> <i class="fas me-2" [ngClass]="{'fa-circle': !ozelKarakterKontrol,    'fa-check text-success': ozelKarakterKontrol}"></i>Özel Karakter (!#$%^&*)</span></li>
+            <li><span class="eight-character">  <i class="fas me-2" [ngClass]="{'fa-circle': !uzunlukKontrol,         'fa-check text-success': uzunlukKontrol}"></i>En Az 8 Karakter</span></li>
+          </ul>
+        </div>
+      </div>
+      <button id="kullaniciSubmitButton" class="hidden">Kaydet</button>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary me-1 w-lg" *ngIf="!kullaniciIslemiKaydetBtn" onclick="document.getElementById('kullaniciSubmitButton').click()"><i class="fa fa-check me-2"></i>Kaydet</button>
+    <button class="btn btn-primary me-1 w-lg" *ngIf="kullaniciIslemiKaydetBtn"><div class="spinner-border spinner-border-sm me-2"></div>Kaydediliyor...</button>
+    <button class="btn btn-outline-dark w-lg" (click)="modal.dismiss('')"><span class="fa fa-times me-2"></span>İptal</button>
+  </div>
+</ng-template>
+
+<div class="card shadow-dark mb-2" @fadeInOut>
+  <div class="card-body">
+    <form class="row m-0" (submit)="kullaniciListele()">
+      <div class="form-group col-md-10">
+        <label>Arama:</label>
+        <input type="text" class="form-control" [(ngModel)]="kullaniciFilterData.ARAMA" [ngModelOptions]="{standalone: true}">
+      </div>
+      <div class="form-group col-md-2">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary btn-block"><i class="fas fa-sync mx-2"></i>Filtrele</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="alert alert-primary p-4" *ngIf="!kullaniciTanimlari && !kullaniciLoader">
+  <i class="ri-forbid-line fs-22 me-3 valign-middle"></i>
+  <span class="fs-14 valign-middle">Listelemek istediğiniz kayıt bulunamadı.</span>
+  <button class="btn btn-primary fa-pull-right w-25" (click)="kullaniciEkleButton()"><span class="fas fa-plus me-2"></span>Yeni Kullanıcı Ekle</button>
+</div>
+
+<div class="alert alert-primary p-4" *ngIf="kullaniciLoader">
+  <div class="spinner-border text-primary m-0 me-4 valign-middle"></div>
+  <span class="fs-14 valign-middle">Kullanıcı kayıtları listeleniyor, Lütfen bekleyiniz.</span>
+</div>
+
+<div class="card shadow-dark mb-2" [hidden]="!kullaniciTanimlari || kullaniciLoader" @fadeInOut>
+  <div class="card-body" *ngIf="kullaniciTanimlari && !kullaniciLoader">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="alert-primary">
+          <tr>
+            <th class="text-center w-5">Eski Sistem Kullanıcı ID</th>
+            <th class="text-center w-20">Ad Soyad</th>
+            <th class="text-center w-30">Mail Adresi</th>
+            <th class="text-center w-15">Durum</th>
+            <th class="text-center w-20">
+              <button class="btn btn-primary btn-sm w-100" (click)="kullaniciEkleButton()"><i class="fa fa-plus me-1"></i>Yeni Kullanıcı Ekle</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody @listAnimation>
+          <tr *ngFor="let kullanici of kullaniciTanimlari">
+            <td class="text-center">{{kullanici.e_eski_sistem_kullanici_id || "-"}}</td>
+            <td>{{kullanici.e_kullanici_adi_soyadi}}</td>
+            <td>{{kullanici.e_mail_adresi}}</td>
+            <td class="text-center">
+              <span class="badge w-100" [ngClass]="kullanici.e_durum === 'Aktif' ? 'bg-success' : 'bg-danger'">{{kullanici.e_durum}}</span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-dark w-48 me-1" (click)="kullaniciDuzenleButton(kullanici)" ><i class="fa fa-pen"></i></button>
+              <button class="btn btn-sm btn-dark w-48" *ngIf="!kullaniciSilinenKayitBtn[kullanici.e_id]" (click)="kullaniciSilButton(kullanici);"><i class="fa fa-trash"></i></button>
+              <button class="btn btn-sm btn-dark w-48" *ngIf="kullaniciSilinenKayitBtn[kullanici.e_id]"><div class="spinner-border spinner-border-sm"></div></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

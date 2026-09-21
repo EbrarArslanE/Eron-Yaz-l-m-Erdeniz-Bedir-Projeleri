@@ -1,0 +1,278 @@
+<style>
+  .parametre-drop-list .parametre-drag-item {
+    cursor: move;
+  }
+
+  .parametre-drag-item.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+  }
+
+  .parametre-drag-item.cdk-drag-animating {
+    transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .parametre-drop-list.cdk-drop-list-dragging .parametre-drag-item:not(.cdk-drag-placeholder) {
+    transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+  }
+</style>
+
+<ng-template #modalComponentTanimlari let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{modalHeader.title}}</h4>
+  </div>
+  <div class="modal-body" style="max-height: calc(100vh - 144px)">
+    <form validControl [formGroup]="componentTanimlariFormu" (submit)="componentIslemiKaydet()">
+      <div class="row m-0">
+        <div class="col-md-12 form-group">
+          <label>Component Adı <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_component_adi" title="Component Adı" required>
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Component URL <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_component_url" title="Component URL" required>
+        </div>
+      </div>
+      <button id="componentSubmitButton" class="hidden">Kaydet</button>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary me-1 w-lg" *ngIf="!componentIslemiKaydetBtn" onclick="document.getElementById('componentSubmitButton').click()"><i class="fa fa-check me-2"></i>Kaydet</button>
+    <button class="btn btn-primary me-1 w-lg" *ngIf="componentIslemiKaydetBtn"><div class="spinner-border spinner-border-sm me-2"></div>Kaydediliyor...</button>
+    <button class="btn btn-outline-dark w-lg" (click)="modal.dismiss('')"><span class="fa fa-times me-2"></span>İptal</button>
+  </div>
+</ng-template>
+
+<ng-template #modalMetodTanimlari let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{modalHeader.title}}</h4>
+  </div>
+  <div class="modal-body" style="max-height: calc(100vh - 144px)">
+    <form validControl [formGroup]="metodTanimlariFormu" (submit)="metodIslemiKaydet()">
+      <div class="row m-0">
+        <div class="col-md-6 form-group">
+          <label>HTTP Metod <span class="text-danger">*</span></label>
+          <select class="form-control" formControlName="e_metod" title="HTTP Metod" required>
+            <option value="">--Seçiniz--</option>
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </div>
+        <div class="col-md-6 form-group">
+          <label>İşlem Adı <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_islem_adi" title="İşlem Adı" required>
+        </div>
+        <div class="col-md-6 form-group">
+          <label>İşlem URL <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_islem_url" title="İşlem URL" required>
+        </div>
+        <div class="col-md-6 form-group">
+          <label>Procedure Adı <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_procedure_adi" title="Procedure Adı" required>
+        </div>
+        <div class="col-md-6 form-group">
+          <label>Procedure İşlem <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="e_procedure_islem" title="Procedure İşlem" required>
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Parametreler</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" [(ngModel)]="yeniParametre" [ngModelOptions]="{standalone: true}" placeholder="Parametre adı girin...">
+            <button type="button" class="btn btn-outline-primary" (click)="parametreEkle()"><i class="fa fa-plus"></i></button>
+          </div>
+          <div class="border rounded p-2 bg-light" style="height: 150px; overflow-y: auto;">
+            <div *ngIf="parametreler.length > 0; else parametreYok">
+              <div class="parametre-drop-list" cdkDropList (cdkDropListDropped)="parametreSurukleBirak($event)">
+                <div class="d-flex justify-content-between align-items-center py-1 parametre-drag-item"
+                     *ngFor="let parametre of parametreler; let i = index"
+                     [class.border-bottom]="i < parametreler.length - 1"
+                     cdkDrag>
+                  <span class="text-dark d-flex align-items-center gap-2">
+                    <i class="fas fa-grip-vertical text-muted"></i>
+                    {{parametre}}
+                  </span>
+                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="parametreSil(i)">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <ng-template #parametreYok>
+              <small class="text-muted d-flex align-items-center justify-content-center h-100">Henüz parametre eklenmemiş</small>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <button id="metodSubmitButton" class="hidden">Kaydet</button>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary me-1 w-lg" *ngIf="!metodIslemiKaydetBtn" onclick="document.getElementById('metodSubmitButton').click()"><i class="fa fa-check me-2"></i>Kaydet</button>
+    <button class="btn btn-primary me-1 w-lg" *ngIf="metodIslemiKaydetBtn"><div class="spinner-border spinner-border-sm me-2"></div>Kaydediliyor...</button>
+    <button class="btn btn-outline-dark w-lg" (click)="modal.dismiss('')"><span class="fa fa-times me-2"></span>İptal</button>
+  </div>
+</ng-template>
+
+<div class="card shadow-dark mb-2">
+  <div class="card-body">
+    <form class="row m-0" (submit)="componentListele()">
+      <div class="form-group col-md-6">
+        <label>Arama:</label>
+        <input type="text" class="form-control" [(ngModel)]="componentFilterData.ARAMA" [ngModelOptions]="{standalone: true}">
+      </div>
+      <div class="form-group col-md-2">
+        <label>Tip:</label>
+        <select class="form-control" [(ngModel)]="componentTipFiltre" [ngModelOptions]="{standalone:true}" (change)="componentListele()">
+          <option value="">Tümü</option>
+          <option *ngFor="let tip of componentTipleri" [value]="tip">{{ tip }}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-2">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary btn-block"><i class="fas fa-sync mx-2"></i>Filtrele</button>
+      </div>
+      <div class="form-group col-md-2">
+        <label>&nbsp;</label>
+        <button type="button" class="btn btn-success btn-block" (click)="degisiklikleriUygula()" [disabled]="degisiklikleriUygulaBtn"><i class="fas fa-check mx-2"></i>Değişiklikleri Uygula</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="alert alert-primary p-4" *ngIf="!componentTanimlari && !componentLoader">
+  <i class="ri-forbid-line fs-22 me-3 valign-middle"></i>
+  <span class="fs-14 valign-middle">Listelemek istediğiniz kayıt bulunamadı.</span>
+  <button class="btn btn-primary fa-pull-right w-25" (click)="componentEkleButton()"><span class="fas fa-plus me-2"></span>Yeni Component Ekle</button>
+</div>
+
+<div class="alert alert-primary p-4" *ngIf="componentLoader">
+  <div class="spinner-border text-primary m-0 me-4 valign-middle"></div>
+  <span class="fs-14 valign-middle">Component kayıtları listeleniyor, Lütfen bekleyiniz.</span>
+</div>
+
+<div class="card shadow-dark mb-2" [hidden]="!componentTanimlari || componentLoader">
+  <div class="card-body" *ngIf="componentTanimlari && !componentLoader">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="alert-primary">
+          <tr>
+            <th class="text-center w-20">Component Adı</th>
+            <th class="text-center w-30">Component URL</th>
+            <th class="text-center w-30">Metodları</th>
+            <th class="text-center w-20">
+              <button class="btn btn-primary btn-sm w-100" (click)="componentEkleButton()"><i class="fa fa-plus me-1"></i>Yeni Component Ekle</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let component of componentTanimlari">
+            <tr [class.table-active]="secilenComponent?.e_id === component.e_id" 
+                (click)="metodListele(component)" 
+                style="cursor: pointer">
+              <td>{{component.e_component_adi}}</td>
+              <td>{{component.e_component_url}}</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-info w-100">
+                  <i class="fas fa-chevron-down me-1" 
+                     [class.fa-chevron-down]="secilenComponent?.e_id !== component.e_id"
+                     [class.fa-chevron-up]="secilenComponent?.e_id === component.e_id"></i>
+                  <span *ngIf="secilenComponent?.e_id !== component.e_id">Metodları Göster</span>
+                  <span *ngIf="secilenComponent?.e_id === component.e_id">Metodları Gizle</span>
+                </button>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-dark w-48 me-1" 
+                        (click)="$event.stopPropagation(); componentDuzenleButton(component)"><i class="fa fa-pen"></i></button>
+                <button class="btn btn-sm btn-dark w-48" 
+                        *ngIf="!componentSilinenKayitBtn[component.e_id]" 
+                        (click)="$event.stopPropagation(); componentSilButton(component);"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-sm btn-dark w-48" 
+                        *ngIf="componentSilinenKayitBtn[component.e_id]"><div class="spinner-border spinner-border-sm text-light"></div></button>
+              </td>
+            </tr>
+            <tr *ngIf="secilenComponent?.e_id === component.e_id">
+              <td colspan="4" class="p-0">
+                <div class="bg-light border-top">
+                  <div class="p-3">
+                    <div class="mb-2">
+                      <h6 class="mb-0 text-primary">
+                        <i class="fas fa-code me-1"></i>{{component.e_component_adi}} Metodları
+                      </h6>
+                    </div>
+
+                    <div class="alert alert-primary p-3 mb-2" *ngIf="metodLoader">
+                      <div class="spinner-border text-primary m-0 me-3 valign-middle"></div>
+                      <span class="valign-middle">Metod kayıtları listeleniyor, Lütfen bekleyiniz.</span>
+                    </div>
+
+                    <div class="alert alert-primary p-3 mb-2" *ngIf="!metodTanimlari && !metodLoader">
+                      <i class="ri-forbid-line fs-20 me-3 valign-middle"></i>
+                      <span class="valign-middle">Listelemek istediğiniz kayıt bulunamadı.</span>
+                      <button class="btn btn-sm btn-primary fa-pull-right" (click)="metodEkleButton()"><span class="fas fa-plus me-2"></span>Yeni Metod Ekle</button>
+                    </div>
+
+                    <div class="table-responsive" *ngIf="metodTanimlari && !metodLoader">
+                      <table class="table table-bordered table-hover table-sm mb-0">
+                        <thead class="table-light">
+                          <tr>
+                            <th width="80" class="text-center">Metod</th>
+                            <th>İşlem Adı</th>
+                            <th>İşlem URL</th>
+                            <th>Procedure</th>
+                            <th>Parametreler</th>
+                            <th width="120" class="text-center">
+                              <button class="btn btn-primary btn-sm w-100" (click)="metodEkleButton()">
+                                <i class="fa fa-plus me-1"></i>Yeni Metod
+                              </button>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let metod of metodTanimlari">
+                            <td class="text-center">
+                              <span class="badge w-100" [ngClass]="{'bg-success': metod.e_metod === 'GET','bg-primary': metod.e_metod === 'POST', 'bg-warning text-dark': metod.e_metod === 'PUT','bg-danger': metod.e_metod === 'DELETE'}">{{metod.e_metod}}</span>
+                            </td>
+                            <td>{{metod.e_islem_adi}}</td>
+                            <td>{{metod.e_islem_url}}</td>
+                            <td>{{metod.e_procedure_adi}}/{{metod.e_procedure_islem}}</td>
+                            <td>
+                              <div *ngIf="metod.e_parametreler; else parametreyok">
+                                <div class="d-flex flex-wrap gap-1">
+                                  <span class="badge bg-light text-dark border" 
+                                        style="font-size: 0.7em;" 
+                                        *ngFor="let param of parametreleriArrayeDonustur(metod.e_parametreler)">
+                                    {{param}}
+                                  </span>
+                                </div>
+                              </div>
+                              <ng-template #parametreyok>
+                                <small class="text-muted">-</small>
+                              </ng-template>
+                            </td>
+                            <td class="text-center">
+                              <button class="btn btn-sm btn-outline-info w-30 me-1" (click)="metodKopyalaButton(metod)" title="Kopyala"><i class="fa fa-copy"></i></button>
+                              <button class="btn btn-sm btn-outline-dark w-30 me-1" (click)="metodDuzenleButton(metod)" title="Düzenle"><i class="fa fa-pen"></i></button>
+                              <button class="btn btn-sm btn-dark w-30" *ngIf="!metodSilinenKayitBtn[metod.e_id]" (click)="metodSilButton(metod)" title="Sil"><i class="fa fa-trash"></i></button>
+                              <button class="btn btn-sm btn-dark w-30" *ngIf="metodSilinenKayitBtn[metod.e_id]"><div class="spinner-border spinner-border-sm text-light"></div></button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+// 
+// _footer.scss
+// 
+
+.footer {
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    color: $footer-color;
+    left: $sidebar-width;
+    height: 88px;
+    padding: 0 15px 0 15px;
+
+    .row{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 88px;
+    }
+}
+
+@media (max-width: 992px) {
+    .footer {
+        left: 0;
+    }
+}
+
+// Enlarge menu
+.vertical-collpsed {
+    .footer {
+        left: $sidebar-collapsed-width;
+    }
+}
+
+body[data-layout="horizontal"] {
+    .footer {
+        left: 0 !important;
+    }  
+}

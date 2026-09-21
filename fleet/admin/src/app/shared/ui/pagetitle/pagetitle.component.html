@@ -1,0 +1,21 @@
+<!-- breadcrumb item -->
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box d-flex align-items-center justify-content-between">
+      <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item active"><i class="ri ri-home-5-fill"></i></li>
+          @for(item of breadcrumbItems;track $index){
+          @if(item.active){
+          <li class="breadcrumb-item active">{{ item.label }}</li>
+          }@else {
+          <li class="breadcrumb-item"><a href="javascript: void(0);">{{ item.label }}</a>
+          </li>
+          }
+          }
+        </ol>
+      </div>
+      <h4 class="mb-0">{{ title }}</h4>
+    </div>
+  </div>
+</div>
